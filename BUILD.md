@@ -6,23 +6,24 @@ Even if you prefer to setup your own dev environment, the `Dockerfile` is a good
 
 I'll assume that you have cloned the repository in a directory called `$ZWALLET` (ex: `/home/user/zwallet`)
 
-## Setup 
+## Setup
 
 Before you start the build, you need a signing key for the app.
 
 Detailed instructions are here: https://flutter.dev/docs/deployment/android#signing-the-app
 
-In short, create a keystore `zwallet.jks` 
+In short, create a keystore `zwallet.jks`
 
 ```shell
-keytool -genkey -v -keystore $ZWALLET/docker/zwallet.jks -keyalg RSA -keysize 2048 -validity 10000 -alias zwallet
+keytool -genkey -v -keystore ./docker/zwallet.jks -keyalg RSA -keysize 2048 -validity 10000 -alias zwallet
 ```
 
 Note: `keytool` comes from the JRE/JDK or Android Studio. If you use JRE/JDK, be advised that Java 11 is *not*
 compatible and will create an unusable keystore.
 
 The tool will ask for a password. Reuse the same password if asked for a second password.
-Put the password in a text file. I'll refer to this file as `/home/user/jkspwd`.  
+Put the password in a text file.
+I'll refer to this file as `./docker/jkspwd`,
 
 ## Docker Builder
 
@@ -37,14 +38,17 @@ Otherwise, from `$ZWALLET` run
 
 After a while, you will have the `zwallet_builder` image.
 
-Next edit the file `docker/Dockerfile` and change the line `FROM hhanh00/zwallet_builder AS builder`
-to `FROM zwallet_builder AS builder`.
+Next edit the file `docker/Dockerfile` and change the line
+`FROM hhanh00/zwallet_builder AS builder` to `FROM zwallet_builder AS builder`.
 
 ## Build
 
 Run
 
-`DOCKER_BUILDKIT=1 docker build -t zwallet -f docker/Dockerfile --secret id=pwd,src=/home/user/jkspwd .`
+```sh
+DOCKER_BUILDKIT=1 docker build -t zwallet -f docker/Dockerfile \
+    --secret id=pwd,src=./docker/zwallet.jks .
+```
 
 After 30mn to 1h, you will have the `zwallet` image.
 
@@ -120,7 +124,7 @@ docker build -f docker/Dockerfile-linux -t zwallet_linux .
 docker run --name zwallet_linux zwallet_linux
 cd misc
 docker cp zwallet_linux:/root .
-flatpak-builder --user --install --force-clean build-dir me.hanh.zwallet.Ywallet.yml 
+flatpak-builder --user --install --force-clean build-dir me.hanh.zwallet.Ywallet.yml
 flatpak build-export ~/repo build-dir
 flatpak build-bundle ~/repo ywallet.flatpak me.hanh.zwallet.Ywallet
 

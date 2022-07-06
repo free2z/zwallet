@@ -114,10 +114,10 @@ private = true
 condition = { env_true = ["DEV"], env_set = ["ANDROID_BUILD_TARGET"] }
 command = "cargo"
 args = [
-  "ndk", 
-  "--platform", 
-  "${ANDROID_PLATFORM_VERSION}", 
-  "--target", 
+  "ndk",
+  "--platform",
+  "${ANDROID_PLATFORM_VERSION}",
+  "--target",
   "${ANDROID_BUILD_TARGET}",
   "build",
   "--features=dart_ffi"
@@ -128,11 +128,11 @@ private = true
 condition = { env_true = ["RELEASE"], env_set = ["ANDROID_BUILD_TARGET"] }
 command = "cargo"
 args = [
-  "ndk", 
-  "--platform", 
-  "${ANDROID_PLATFORM_VERSION}", 
-  "--target", 
-  "${ANDROID_BUILD_TARGET}", 
+  "ndk",
+  "--platform",
+  "${ANDROID_PLATFORM_VERSION}",
+  "--target",
+  "${ANDROID_BUILD_TARGET}",
   "build",
   "--release",
   "--features=dart_ffi"
@@ -180,7 +180,7 @@ condition = { env_true = ["RELEASE"] }
 env = { ANDROID_BUILD_TARGET = "x86" }
 run_task = "android-build-release"
 
-  
+
 [tasks.android-x86_64-release]
 private = true
 condition = { env_true = ["RELEASE"] }
